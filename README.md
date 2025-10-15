@@ -1,13 +1,13 @@
-# ESP8266 MicroPython Projects
+# ESP8266 Arduino Sketches
 
-Welcome to the ESP8266 MicroPython project repository! This repository contains tutorials, examples, and scripts for programming ESP8266 boards (Wemos D1, D1 Mini) using MicroPython.
+Welcome to the ESP8266 Arduino sketches repository! This repository contains tutorials, examples, and sketches for programming ESP8266 boards (Wemos D1, D1 Mini) using the Arduino IDE.
 
 ## 🎯 About
 
 The ESP8266 is a low-cost Wi-Fi microcontroller chip with a full TCP/IP stack. This repository provides:
 
-- **Example Scripts**: Ready-to-use MicroPython scripts for common tasks
-- **Tutorials**: Step-by-step guides for learning MicroPython on the ESP8266
+- **Example Sketches**: Ready-to-use Arduino sketches (.ino files) for common tasks
+- **Tutorials**: Step-by-step guides for learning Arduino programming on the ESP8266
 - **Libraries**: Helper libraries and utilities for ESP8266 development
 - **Documentation**: Comprehensive guides and resources
 
@@ -18,24 +18,26 @@ The ESP8266 is a low-cost Wi-Fi microcontroller chip with a full TCP/IP stack. T
 - ESP8266 board (Wemos D1 or D1 Mini)
 - Micro USB cable
 - Computer with USB port
-- MicroPython firmware for ESP8266
+- Arduino IDE (1.8.x or 2.x)
 
 ### Quick Start
 
-1. **Install MicroPython on your ESP8266**
-   - Download the latest MicroPython firmware from [micropython.org](https://micropython.org/download/esp8266/)
-   - Install esptool: `pip install esptool`
-   - Erase flash: `esptool.py --port /dev/ttyUSB0 erase_flash`
-   - Flash firmware: `esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash --flash_size=detect 0 esp8266-*.bin`
+1. **Install Arduino IDE and ESP8266 Board Support**
+   - Download and install Arduino IDE from [arduino.cc](https://www.arduino.cc/en/software)
+   - Open Arduino IDE
+   - Go to File → Preferences
+   - Add to "Additional Board Manager URLs": `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
+   - Go to Tools → Board → Boards Manager
+   - Search for "esp8266" and install "esp8266 by ESP8266 Community"
 
-2. **Connect to your ESP8266**
-   - Use Thonny IDE (recommended for beginners) or any serial terminal
-   - Select the MicroPython (ESP8266) interpreter
-   - Connect via the USB serial port (usually /dev/ttyUSB0 on Linux, COM port on Windows)
+2. **Configure Arduino IDE for ESP8266**
+   - Go to Tools → Board → ESP8266 Boards → select your board (e.g., "LOLIN(WEMOS) D1 R2 & mini")
+   - Select your COM port under Tools → Port
+   - Set upload speed to 115200 (or 921600 for faster uploads)
 
 3. **Run your first program**
    - Try the examples in the `examples/basic/` directory
-   - Start with `blink.py` to test your setup
+   - Start with `blink/blink.ino` to test your setup
 
 ## 📁 Project Structure
 
@@ -54,10 +56,10 @@ esp8266/
 
 ## 💡 Examples
 
-Check out the `examples/` directory for ready-to-use scripts:
+Check out the `examples/` directory for ready-to-use Arduino sketches:
 
 - **Basic**: LED blinking, button input, PWM, ADC readings
-- **Intermediate**: I2C sensors (SSD1306, BME280, BME680, INA219), ultrasonic sensor
+- **Intermediate**: I2C sensors (SSD1306, BME280, BME680, INA219), ultrasonic sensor, I2C scanner tool
 - **Advanced**: Complete projects with UI combining multiple components
 
 ## 📚 Hardware Support
@@ -77,13 +79,15 @@ This repository includes examples for:
 ### Non-I2C Devices
 - **HC-SR04** - Ultrasonic Distance Sensor (with bridged echo/trigger option)
 
+### Utility Tools
+- **I2C Scanner** - Scan and identify I2C devices, with optional SSD1306 display output
+
 ## 📖 Documentation
 
 Detailed documentation is available in the `docs/` directory:
 
 - Hardware specifications
 - Pin diagrams and references
-- API documentation
 - Troubleshooting guides
 - Best practices
 
@@ -105,8 +109,8 @@ This project is licensed under the GNU General Public License v2.0 - see the [LI
 
 ## 🔗 Useful Links
 
-- [ESP8266 Documentation](https://docs.micropython.org/en/latest/esp8266/quickref.html)
-- [MicroPython Documentation](https://docs.micropython.org/en/latest/)
+- [ESP8266 Arduino Core Documentation](https://arduino-esp8266.readthedocs.io/)
+- [Arduino ESP8266 Libraries](https://github.com/esp8266/Arduino/tree/master/libraries)
 - [ESP8266 Datasheet](https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf)
 - [Wemos D1 Mini Pinout](https://www.wemos.cc/en/latest/d1/d1_mini.html)
 

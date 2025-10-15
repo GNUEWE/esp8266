@@ -1,6 +1,6 @@
 # Examples
 
-This directory contains MicroPython example scripts for the ESP8266 (Wemos D1 and D1 Mini).
+This directory contains Arduino sketch examples for the ESP8266 (Wemos D1 and D1 Mini).
 
 ## Directory Structure
 
@@ -10,29 +10,25 @@ This directory contains MicroPython example scripts for the ESP8266 (Wemos D1 an
 
 ## Getting Started
 
-If you're new to MicroPython on the ESP8266:
+If you're new to Arduino on the ESP8266:
 
-1. Start with [basic/blink.py](basic/blink.py) - the classic LED blink
-2. Try [basic/button.py](basic/button.py) - reading input
-3. Explore [basic/pwm_led.py](basic/pwm_led.py) - controlling LED brightness
-4. Learn ADC with [basic/adc_read.py](basic/adc_read.py)
+1. Start with [basic/blink](basic/blink/blink.ino) - the classic LED blink
+2. Try [basic/button](basic/button/button.ino) - reading input
+3. Explore [basic/pwm_led](basic/pwm_led/pwm_led.ino) - controlling LED brightness
+4. Learn ADC with [basic/adc_read](basic/adc_read/adc_read.ino)
 
 ## Running Examples
 
-### Using Thonny IDE:
-1. Open the example file
-2. Save it to your ESP8266 (File → Save As → MicroPython device)
-3. Run it (F5 or green Run button)
+### Using Arduino IDE:
+1. Open the .ino file
+2. Select your board: Tools → Board → ESP8266 Boards → LOLIN(WEMOS) D1 R2 & mini
+3. Select your port: Tools → Port → (your COM port)
+4. Click Upload button or press Ctrl+U
 
-### Using mpremote:
-```bash
-mpremote connect /dev/ttyUSB0 run examples/basic/blink.py
-```
-
-### Using ampy:
-```bash
-ampy --port /dev/ttyUSB0 put examples/basic/blink.py
-```
+### Serial Monitor:
+- Open Serial Monitor: Tools → Serial Monitor
+- Set baud rate to 115200
+- View output from Serial.print() statements
 
 ## Hardware Requirements
 
@@ -59,6 +55,7 @@ Some examples may require:
 - Distance measurement (ultrasonic)
 - Environmental sensors (BME280, BME680)
 - Power monitoring (INA219)
+- **I2C Scanner Tool** - Scan and identify I2C devices
 
 ### Advanced Examples
 - Multi-sensor projects
@@ -76,6 +73,18 @@ Some examples may require:
 
 ### Other Devices
 - **HC-SR04** - Ultrasonic Distance Sensor (with bridged echo/trigger)
+
+## Required Libraries
+
+Most intermediate and advanced examples require external libraries. Install them via Arduino IDE:
+
+**Tools → Manage Libraries → Search and Install:**
+- Adafruit GFX Library
+- Adafruit SSD1306
+- Adafruit BME280 Library
+- Adafruit BME680 Library
+- Adafruit INA219
+- Adafruit Unified Sensor
 
 ## Learning Path
 

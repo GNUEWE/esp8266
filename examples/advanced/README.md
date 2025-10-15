@@ -1,11 +1,14 @@
 # Advanced Examples
 
-This directory contains advanced-level examples that combine multiple sensors and components into complete projects.
+This directory contains advanced-level Arduino sketches that combine multiple sensors and components into complete projects.
 
 ## Examples
 
-### 1. environmental_monitor.py
+### 1. environmental_monitor
 A comprehensive environmental monitoring station with OLED UI.
+
+**Folder:** [environmental_monitor/](environmental_monitor/)  
+**File:** environmental_monitor.ino
 
 **What you'll learn:**
 - Combining multiple I2C devices
@@ -17,10 +20,10 @@ A comprehensive environmental monitoring station with OLED UI.
 **Features:**
 - Real-time environmental data display (temp, humidity, pressure)
 - Distance monitoring with visual indicators
-- Power consumption tracking
+- Power consumption tracking (if INA219 present)
 - Temperature graphing
 - Automatic screen rotation
-- Error handling for missing sensors
+- Modular design - works with partial hardware
 
 **Hardware needed:**
 - ESP8266 (Wemos D1 or D1 Mini)
@@ -28,12 +31,13 @@ A comprehensive environmental monitoring station with OLED UI.
 - BME280 or BME680 Environmental Sensor
 - HC-SR04 Ultrasonic Sensor (bridged)
 - INA219 Current Sensor (optional)
-- Jumper wires
 
-**Required libraries:**
-- ssd1306.py
-- bme280.py or bme680.py
-- ina219.py (optional)
+**Libraries required:**
+- Adafruit GFX Library
+- Adafruit SSD1306 Library
+- Adafruit BME280 Library (or BME680)
+- Adafruit INA219 Library (optional)
+- Adafruit Unified Sensor Library
 
 **Connections:**
 
@@ -53,30 +57,28 @@ HC-SR04:
 ## Using the Examples
 
 ### Setup
-1. Install required libraries on your ESP8266
+1. Install required libraries via Arduino IDE Library Manager
 2. Connect all hardware components
-3. Upload the example script
-4. Run and enjoy!
+3. Open the sketch in Arduino IDE
+4. Select board and port
+5. Upload and enjoy!
 
 ### Customization
 
 The environmental monitor is designed to be modular. You can:
-- Enable/disable specific sensors
+- Enable/disable specific sensors (code will detect automatically)
 - Adjust screen rotation timing
 - Modify display layouts
 - Add new sensor types
 - Change graph parameters
 
 Example customization:
-```python
-# Change screen duration
-SCREEN_DURATION = 5000  # 5 seconds
+```cpp
+// Change screen duration
+const unsigned long SCREEN_DURATION = 5000;  // 5 seconds
 
-# Disable power monitoring screen
-screens = [draw_screen_0, draw_screen_1, draw_screen_3]
-
-# Adjust graph history
-MAX_HISTORY = 64
+// Adjust graph history
+const int MAX_HISTORY = 64;
 ```
 
 ## Project Ideas
@@ -112,8 +114,7 @@ Based on these examples, you can create:
 
 - Use appropriate I2C frequency (100kHz for reliability, 400kHz for speed)
 - Add delays between sensor readings
-- Handle exceptions gracefully
-- Use async patterns for better responsiveness
+- Handle errors gracefully
 - Consider deep sleep for battery-powered projects
 
 ## Troubleshooting
@@ -126,14 +127,13 @@ Based on these examples, you can create:
 ### Multiple I2C Devices
 - All devices share SDA and SCL
 - Each device must have unique address
-- Use `i2c.scan()` to verify addresses
-- Add pull-up resistors (4.7kΩ) if needed
+- Use I2C scanner to verify addresses
 
 ### Memory Issues
-- ESP8266 has limited RAM (~36KB free)
+- ESP8266 has limited RAM
 - Use smaller history buffers
-- Free unused variables
-- Consider splitting into modules
+- Split into functions
+- Consider using PROGMEM for constants
 
 ### Power Issues
 - Ensure adequate power supply
@@ -151,7 +151,5 @@ Based on these examples, you can create:
 
 ## Resources
 
-- [ESP8266 MicroPython Docs](https://docs.micropython.org/en/latest/esp8266/)
-- [SSD1306 Display Guide](https://randomnerdtutorials.com/esp8266-0-96-inch-oled-display-with-arduino-ide/)
-- [BME280 Tutorial](https://learn.adafruit.com/adafruit-bme280-humidity-barometric-pressure-temperature-sensor-breakout)
-- [BME680 Tutorial](https://learn.adafruit.com/adafruit-bme680-humidity-temperature-barometic-pressure-voc-gas)
+- [ESP8266 Arduino Core Documentation](https://arduino-esp8266.readthedocs.io/)
+- [Adafruit Learning System](https://learn.adafruit.com/)

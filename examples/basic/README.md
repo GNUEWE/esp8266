@@ -1,16 +1,19 @@
 # Basic Examples
 
-This directory contains beginner-friendly examples for getting started with MicroPython on the ESP8266.
+This directory contains beginner-friendly Arduino sketches for getting started with ESP8266.
 
 ## Examples
 
-### 1. blink.py
+### 1. blink
 The classic "Hello World" of microcontrollers. Blinks the onboard LED.
 
+**Folder:** [blink/](blink/)  
+**File:** blink.ino
+
 **What you'll learn:**
-- Using the `machine` module
+- Basic Arduino sketch structure (setup and loop)
 - Controlling GPIO pins
-- Basic timing with `time.sleep()`
+- Using Serial Monitor
 - Understanding active LOW LEDs on ESP8266
 
 **Hardware needed:**
@@ -18,14 +21,17 @@ The classic "Hello World" of microcontrollers. Blinks the onboard LED.
 
 ---
 
-### 2. button.py
+### 2. button
 Reading button input and controlling an LED with debouncing.
+
+**Folder:** [button/](button/)  
+**File:** button.ino
 
 **What you'll learn:**
 - Reading digital input
-- Using pull-up resistors
+- Using pull-up resistors (INPUT_PULLUP)
 - Button debouncing
-- Event-driven programming basics
+- State management
 
 **Hardware needed:**
 - ESP8266 (Wemos D1 or D1 Mini)
@@ -34,13 +40,15 @@ Reading button input and controlling an LED with debouncing.
 
 ---
 
-### 3. pwm_led.py
-Fading an LED using Pulse Width Modulation (PWM).
+### 3. pwm_led
+Fading an LED using PWM (analogWrite).
+
+**Folder:** [pwm_led/](pwm_led/)  
+**File:** pwm_led.ino
 
 **What you'll learn:**
-- PWM basics
+- PWM basics with analogWrite()
 - Controlling LED brightness
-- Duty cycle concepts
 - ESP8266 PWM range (0-1023)
 
 **Hardware needed:**
@@ -49,11 +57,14 @@ Fading an LED using Pulse Width Modulation (PWM).
 
 ---
 
-### 4. adc_read.py
+### 4. adc_read
 Reading analog values from the ADC pin.
 
+**Folder:** [adc_read/](adc_read/)  
+**File:** adc_read.ino
+
 **What you'll learn:**
-- Analog to Digital Conversion
+- Analog to Digital Conversion with analogRead()
 - Reading sensors
 - Voltage calculations
 - ESP8266 ADC limitations (0-1.0V, single pin)
@@ -66,11 +77,12 @@ Reading analog values from the ADC pin.
 
 ## How to Use
 
-1. Connect your ESP8266 to your computer
-2. Open Thonny IDE or your preferred MicroPython editor
-3. Copy the example code to your ESP8266
-4. Run the script and observe the output
-5. Modify the code to experiment and learn!
+1. Open Arduino IDE
+2. Select your board: Tools → Board → ESP8266 Boards → LOLIN(WEMOS) D1 R2 & mini
+3. Select your port: Tools → Port → (your COM port)
+4. Open the sketch (.ino file)
+5. Click Upload (or press Ctrl+U)
+6. Open Serial Monitor (Tools → Serial Monitor) and set baud rate to 115200
 
 ## Next Steps
 
