@@ -4,8 +4,8 @@
 #include "svg.h"
 
 // Replace with your network (or use the AP fallback below)
-const char* ssid = "BETSY";
-const char* password = "joey1313";
+const char* ssid = "WEEFEE";
+const char* password = "12345678";
 
 // AP fallback
 const char* ap_ssid = "Offline-Selftour";
