@@ -1,14 +1,15 @@
-# ESP8266 Web Server
+# Roosevelt Lake Offline Self-Tour Portal
 
-A WiFi-enabled web server for ESP8266 microcontrollers with automatic AP fallback.
+An ESP8266-powered offline information portal for Roosevelt Lake and the Diversion Dam area in Arizona. Perfect for providing visitors with information about the area when internet connectivity is unavailable.
 
 ## Features
 
-- **WiFi Station Mode**: Connects to your existing WiFi network
-- **AP Fallback**: Automatically creates an access point if WiFi connection fails
-- **Web Server**: Serves HTML pages and SVG content
-- **Multiple Routes**: Home page, About page, and logo endpoint
-- **Responsive Design**: Mobile-friendly web interface
+- **Offline Access**: Works completely offline via WiFi access point
+- **WiFi Fallback**: Attempts to connect to existing WiFi, then creates its own AP
+- **Comprehensive Information**: Details about Roosevelt Lake, Diversion Dam, activities, and wildlife
+- **Self-Guided Tour**: Learn about hiking, fishing, kayaking, and local wildlife
+- **Mobile-Friendly**: Responsive design works on all devices
+- **Low Power**: Runs on ESP8266 microcontroller
 
 ## Hardware Requirements
 
@@ -35,27 +36,47 @@ A WiFi-enabled web server for ESP8266 microcontrollers with automatic AP fallbac
 
 ## Usage
 
-### Station Mode (Default)
-When powered on, the ESP8266 attempts to connect to the configured WiFi network for 8 seconds. If successful, it prints the IP address to the Serial Monitor (115200 baud).
+### Deployment
+Place the ESP8266 device at Roosevelt Lake near the Diversion Dam area. The device will create a WiFi access point that visitors can connect to for offline access to tour information.
 
-### Access Point Mode (Fallback)
-If WiFi connection fails, the device automatically starts an access point:
+### Station Mode (Default)
+When powered on, the ESP8266 attempts to connect to a configured WiFi network for 8 seconds. If successful, it prints the IP address to the Serial Monitor (115200 baud).
+
+### Access Point Mode (Primary Use Case)
+If WiFi connection fails (or no network is available), the device automatically starts an access point:
 - **SSID**: Offline-Selftour
 - **Password**: 12345678
 - **IP Address**: 192.168.4.1
 
-### Accessing the Web Interface
+### Accessing the Tour Information
 
-Navigate to the device's IP address in a web browser:
-- **Home**: `http://<device-ip>/`
-- **About**: `http://<device-ip>/about`
-- **Logo**: `http://<device-ip>/logo.svg`
+Visitors connect to the "Offline-Selftour" WiFi network, then navigate to `http://192.168.4.1` in any web browser:
+- **Home**: Information about Roosevelt Lake and Diversion Dam
+- **Activities & Wildlife**: Detailed guide to fishing, hiking, kayaking, and local wildlife
+- **Logo**: Roosevelt Lake scenic logo
+
+## Content
+
+### Pages Included
+
+1. **Home Page** - Welcome and overview of Roosevelt Lake and Diversion Dam
+   - Location and elevation information
+   - History of the Diversion Dam
+   - Natural beauty description
+
+2. **Activities & Wildlife Page** - Comprehensive recreation guide
+   - **Fishing**: Bass, crappie, catfish - Roosevelt is a premier fishing destination
+   - **Hiking**: Desert trails with lake views
+   - **Kayaking & Rafting**: Calm waters perfect for paddling
+   - **Camping**: Information about local campgrounds
+   - **Wildlife**: Bald eagles, bighorn sheep, desert animals, and plants
+   - **Safety Tips**: Desert safety and best visiting times
 
 ## File Structure
 
 - `esp8266_webserver.ino` - Main Arduino sketch with WiFi and server setup
-- `pages.h` - HTML content for index and about pages
-- `svg.h` - SVG logo graphic
+- `pages.h` - HTML content about Roosevelt Lake, activities, and wildlife
+- `svg.h` - Roosevelt Lake scenic logo with mountains and cacti
 
 ## Configuration
 
