@@ -82,8 +82,8 @@ Visitors connect to the "Offline-Selftour" WiFi network, then navigate to `http:
 
 ### WiFi Settings
 ```cpp
-const char* ssid = "BETSY";              // Your WiFi network name
-const char* password = "joey1313";        // Your WiFi password
+const char* ssid = "BWEEFEE";              // Your WiFi network name
+const char* password = "12345678";        // Your WiFi password
 ```
 
 ### AP Fallback Settings
