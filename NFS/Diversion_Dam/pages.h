@@ -75,6 +75,7 @@ const char index_html[] PROGMEM = R"rawliteral(
     <nav>
       <a href="/">Home</a>
       <a href="/about">Activities & Wildlife</a>
+      <a href="/weather">Weather</a>
     </nav>
     <div class="logo">
       <img src="/logo.svg" alt="Roosevelt Lake" width="220">
@@ -185,6 +186,7 @@ const char about_html[] PROGMEM = R"rawliteral(
     <nav>
       <a href="/">Home</a>
       <a href="/about">Activities & Wildlife</a>
+      <a href="/weather">Weather</a>
     </nav>
     <div class="info">
       

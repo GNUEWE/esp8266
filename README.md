@@ -6,6 +6,7 @@ An ESP8266-powered offline information portal for Roosevelt Lake and the Diversi
 
 - **Offline Access**: Works completely offline via WiFi access point
 - **WiFi Fallback**: Attempts to connect to existing WiFi, then creates its own AP
+- **Weather Monitoring**: Real-time weather data from BME280 sensor (temperature, humidity, pressure)
 - **Comprehensive Information**: Details about Roosevelt Lake, Diversion Dam, activities, and wildlife
 - **Self-Guided Tour**: Learn about hiking, fishing, kayaking, and local wildlife
 - **Mobile-Friendly**: Responsive design works on all devices
@@ -14,25 +15,46 @@ An ESP8266-powered offline information portal for Roosevelt Lake and the Diversi
 ## Hardware Requirements
 
 - ESP8266 module (NodeMCU, Wemos D1 Mini, or similar)
+- BME280 I2C sensor (optional, for weather data)
 - USB cable for programming
+
+### BME280 Wiring (Optional)
+
+Connect the BME280 sensor to your ESP8266:
+- VCC → 3.3V
+- GND → GND
+- SDA → GPIO4 (D2 on NodeMCU/Wemos D1 Mini)
+- SCL → GPIO5 (D1 on NodeMCU/Wemos D1 Mini)
+
+*Note: The weather page will work without the sensor, showing general weather information instead of live readings.*
 
 ## Software Requirements
 
 - Arduino IDE with ESP8266 board support
 - ESP8266WiFi library
 - ESP8266WebServer library
+- Adafruit BME280 library
+- Adafruit Unified Sensor library
 
 ## Installation
 
-1. Open `esp8266_webserver.ino` in Arduino IDE
-2. Update WiFi credentials in the sketch:
+1. Install required libraries in Arduino IDE:
+   - Go to Sketch → Include Library → Manage Libraries
+   - Search and install: "Adafruit BME280" and "Adafruit Unified Sensor"
+
+2. Open `NFS/Diversion_Dam/esp8266_webserver.ino` in Arduino IDE
+
+3. Update WiFi credentials in the sketch:
    ```cpp
    const char* ssid = "YOUR_WIFI_SSID";
    const char* password = "YOUR_WIFI_PASSWORD";
    ```
-3. Select your ESP8266 board from Tools > Board
-4. Select the correct COM port from Tools > Port
-5. Upload the sketch to your ESP8266
+
+4. Select your ESP8266 board from Tools > Board
+
+5. Select the correct COM port from Tools > Port
+
+6. Upload the sketch to your ESP8266
 
 ## Usage
 
@@ -53,6 +75,7 @@ If WiFi connection fails (or no network is available), the device automatically 
 Visitors connect to the "Offline-Selftour" WiFi network, then navigate to `http://192.168.4.1` in any web browser:
 - **Home**: Information about Roosevelt Lake and Diversion Dam
 - **Activities & Wildlife**: Detailed guide to fishing, hiking, kayaking, and local wildlife
+- **Weather**: Live weather conditions from BME280 sensor (temp, humidity, pressure)
 - **Logo**: Roosevelt Lake scenic logo
 
 ## Content
@@ -72,11 +95,27 @@ Visitors connect to the "Offline-Selftour" WiFi network, then navigate to `http:
    - **Wildlife**: Bald eagles, bighorn sheep, desert animals, and plants
    - **Safety Tips**: Desert safety and best visiting times
 
+3. **Weather Page** - Live environmental conditions
+   - **Temperature**: Real-time readings in °F and °C
+   - **Humidity**: Current relative humidity percentage
+   - **Pressure**: Barometric pressure in hPa and inHg
+   - **Conditions**: Weather interpretation and visitor recommendations
+   - **Auto-refresh**: Updates every 30 seconds with latest sensor data
+
 ## File Structure
 
-- `esp8266_webserver.ino` - Main Arduino sketch with WiFi and server setup
-- `pages.h` - HTML content about Roosevelt Lake, activities, and wildlife
-- `svg.h` - Roosevelt Lake scenic logo with mountains and cacti
+```
+esp8266/
+├── README.md
+└── NFS/                          # National Forest Service projects
+    └── Diversion_Dam/            # Roosevelt Lake Diversion Dam project
+        ├── esp8266_webserver.ino # Main Arduino sketch
+        ├── pages.h               # HTML content for home and activities pages
+        ├── svg.h                 # Roosevelt Lake scenic logo
+        └── weather.h             # BME280 sensor integration and weather page
+```
+
+Each `.ino` project is organized in its own folder under `NFS/` for National Forest Service locations.
 
 ## Configuration
 
