@@ -40,7 +40,7 @@ Install via Arduino IDE Library Manager:
 
 ## Files
 
-- `esp8266_webserver.ino` - Main sketch with WiFi, web server, and sensor initialization
+- `Diversion_Dam.ino` - Main sketch with WiFi, web server, and sensor initialization
 - `pages.h` - HTML pages for home and activities/wildlife information
 - `svg.h` - Roosevelt Lake logo SVG
 - `weather.h` - BME280 sensor integration and weather page generation

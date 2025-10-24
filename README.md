@@ -42,7 +42,7 @@ Connect the BME280 sensor to your ESP8266:
    - Search and install: "BME280" by Tyler Glenn
    - This library was chosen for its simplicity and minimal dependency footprint
 
-2. Open `NFS/Diversion_Dam/esp8266_webserver.ino` in Arduino IDE
+2. Open `NFS/Diversion_Dam/Diversion_Dam.ino` in Arduino IDE
 
 3. Update WiFi credentials in the sketch:
    ```cpp
@@ -109,7 +109,7 @@ esp8266/
 ├── README.md
 └── NFS/                          # National Forest Service projects
     └── Diversion_Dam/            # Roosevelt Lake Diversion Dam project
-        ├── esp8266_webserver.ino # Main Arduino sketch
+        ├── Diversion_Dam.ino     # Main Arduino sketch
         ├── pages.h               # HTML content for home and activities pages
         ├── svg.h                 # Roosevelt Lake scenic logo
         └── weather.h             # BME280 sensor integration and weather page
