@@ -49,12 +49,23 @@ void readBME280() {
     return;
   }
   
-  // Read all sensor data at once
-  bme.read(pressure, temperature, humidity);
+  // Read sensor data with proper variable order
+  float temp(NAN), hum(NAN), pres(NAN);
   
-  // Pressure is already in hPa from the library
-  // Temperature is in Celsius
-  // Humidity is in %
+  BME280::TempUnit tempUnit(BME280::TempUnit_Celsius);
+  BME280::PresUnit presUnit(BME280::PresUnit_hPa);
+  
+  bme.read(pres, temp, hum, tempUnit, presUnit);
+  
+  // Update global variables only if readings are valid
+  if (!isnan(temp)) temperature = temp;
+  if (!isnan(hum)) humidity = hum;
+  if (!isnan(pres)) pressure = pres;
+  
+  // Debug output
+  Serial.print("Temp: "); Serial.print(temperature); Serial.print("°C, ");
+  Serial.print("Humidity: "); Serial.print(humidity); Serial.print("%, ");
+  Serial.print("Pressure: "); Serial.print(pressure); Serial.println(" hPa");
 }
 
 // Convert Celsius to Fahrenheit

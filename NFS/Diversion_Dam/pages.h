@@ -91,9 +91,9 @@ const char index_html[] PROGMEM = R"rawliteral(
       </div>
       
       <h2>About the Diversion Dam</h2>
-      <p>The Roosevelt Diversion Dam, located downstream from the main Roosevelt Dam, plays a crucial role in Arizona's water management system. Built in the early 1900s as part of the Salt River Project, this area represents an important piece of Arizona's agricultural and settlement history.</p>
+      <p>The Roosevelt Diversion Dam, located upstream from the main Roosevelt Dam, plays a crucial role in Arizona's water management system. Built in the early 1900s as part of the Salt River Project, this dam was constructed to assist in the building of the main Roosevelt Dam and represents an important piece of Arizona's agricultural and settlement history.</p>
       
-      <p>The dam diverts water from Roosevelt Lake into canals that help irrigate the Phoenix valley, making the desert bloom and supporting one of the nation's most productive agricultural regions.</p>
+      <p>The dam diverts water from the Salt River into canals that help irrigate the Phoenix valley, making the desert bloom and supporting one of the nation's most productive agricultural regions.</p>
       
       <h2>Natural Beauty</h2>
       <p>The area around Diversion Dam showcases the stunning Sonoran Desert landscape, with iconic saguaro cacti standing sentinel over the turquoise waters. The lake is surrounded by rugged mountains that glow brilliant shades of red and gold at sunset, creating breathtaking photo opportunities.</p>
