@@ -167,8 +167,8 @@ Another ESP8266 can read data from the gateway:
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char* ssid = "RooseveltMesh-Gateway";
-const char* password = "your-password";
+const char* ssid = "RooseveltMesh";       // Mesh network SSID
+const char* password = "meshpass123";      // Mesh network password
 const char* apiUrl = "http://192.168.4.1/api/sensors";
 
 WiFiClient wifiClient;

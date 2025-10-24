@@ -6,11 +6,18 @@ Get your Roosevelt Lake mesh network up and running in 30 minutes!
 
 ### Hardware Checklist
 - [ ] 4x ESP8266 Wemos D1 R2 boards
-- [ ] 3x BME280 sensors (or BMP280)
-- [ ] 1x BME680 sensor
-- [ ] 2x SSD1306 OLED displays (128x64, I2C)
+- [ ] 3x BME280 sensors (or BMP280) - *optional, use what you have*
+- [ ] 1x BME680 sensor - *optional*
+- [ ] 2x SSD1306 OLED displays (128x64, I2C) - *optional*
 - [ ] USB cables for programming (4x micro USB)
 - [ ] Optional: Enclosures, power supplies, mounting hardware
+
+**Note:** The issue mentions having 4 ESP8266 boards available. You can configure them as:
+- **Option A:** 1 Gateway + 2 BME280 + 1 BME680 (focus on sensors)
+- **Option B:** 1 Gateway + 2 BME280 + 1 Display (mix sensors and display)
+- **Option C:** 1 Gateway + 1 BME280 + 1 BME680 + 1 Display (one of each)
+
+Choose the combination that best fits your deployment needs!
 
 ### Software Setup
 - [ ] Arduino IDE installed (v1.8.x or v2.x)
@@ -138,7 +145,14 @@ For **each of the 2 OLED displays**:
    - Should show "CONNECTING TO MESH NETWORK"
    - Then show sensor data when received
 
-✅ All nodes connected? You should see 7 nodes total!
+✅ All nodes connected? With the basic 4-node setup, you should see the gateway plus sensor nodes connecting!
+
+**Note:** The example shows a 7-node deployment (gateway + 3 BME280 + 1 BME680 + 2 displays). With 4 ESP8266 boards, you might configure:
+- 1 Gateway (no sensor)
+- 2 BME280 sensor nodes
+- 1 OLED display node
+
+Or choose a different combination based on your needs.
 
 ---
 
