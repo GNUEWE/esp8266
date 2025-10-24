@@ -2,6 +2,7 @@
 #include <ESP8266WebServer.h>
 #include "pages.h"
 #include "svg.h"
+#include "weather.h"
 
 // Replace with your network (or use the AP fallback below)
 const char* ssid = "WEEFEE";
@@ -21,6 +22,11 @@ void handleAbout() {
 }
 void handleLogo() {
   server.send_P(200, "image/svg+xml", logo_svg);
+}
+void handleWeather() {
+  readBME280();
+  String html = generateWeatherHTML();
+  server.send(200, "text/html", html);
 }
 
 void setupWiFi() {
@@ -47,10 +53,16 @@ void setupWiFi() {
 void setup() {
   Serial.begin(115200);
   delay(10);
+  
+  // Initialize BME280 sensor
+  Wire.begin(); // Initialize I2C (SDA=GPIO4/D2, SCL=GPIO5/D1)
+  initBME280();
+  
   setupWiFi();
 
   server.on("/", HTTP_GET, handleRoot);
   server.on("/about", HTTP_GET, handleAbout);
+  server.on("/weather", HTTP_GET, handleWeather);
   server.on("/logo.svg", HTTP_GET, handleLogo);
 
   server.onNotFound([]() {
