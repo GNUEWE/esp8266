@@ -107,15 +107,38 @@ Visitors connect to the "Offline-Selftour" WiFi network, then navigate to `http:
 ```
 esp8266/
 ├── README.md
-└── NFS/                          # National Forest Service projects
-    └── Diversion_Dam/            # Roosevelt Lake Diversion Dam project
-        ├── Diversion_Dam.ino     # Main Arduino sketch
-        ├── pages.h               # HTML content for home and activities pages
-        ├── svg.h                 # Roosevelt Lake scenic logo
-        └── weather.h             # BME280 sensor integration and weather page
+└── NFS/                                    # National Forest Service projects
+    ├── Diversion_Dam/                      # Single-node portal (original)
+    │   ├── Diversion_Dam.ino               # Main Arduino sketch
+    │   ├── pages.h                         # HTML content for pages
+    │   ├── svg.h                           # Roosevelt Lake logo
+    │   └── weather.h                       # BME280 sensor integration
+    └── Mesh_Network/                       # Multi-node mesh network (NEW)
+        ├── README.md                       # Mesh network documentation
+        ├── mesh_config.json                # Configuration and topology
+        ├── Mesh_Network.ino                # Gateway/root node
+        ├── Sensor_Node_BME280.ino          # BME280 sensor node
+        ├── Sensor_Node_BME680.ino          # BME680 sensor node
+        └── Display_Node_OLED.ino           # OLED display node
 ```
 
 Each `.ino` project is organized in its own folder under `NFS/` for National Forest Service locations.
+
+## Projects
+
+### Diversion_Dam (Single Node)
+Original single-node implementation with web portal and BME280 sensor. Perfect for simple deployments with a single access point.
+
+### Mesh_Network (Multi-Node) ⭐ NEW
+WiFi mesh network implementation supporting multiple ESP8266 nodes with various sensors and displays. Extends coverage across large areas by automatically routing data between nodes. See [Mesh_Network/README.md](NFS/Mesh_Network/README.md) for detailed documentation.
+
+**Mesh Network Features:**
+- 🌐 Extended WiFi range through mesh topology
+- 📡 Self-organizing and self-healing network
+- 📊 JSON-based sensor data exchange
+- 🖥️ OLED displays for visitor information
+- 🌡️ Support for BME280 and BME680 sensors
+- 🔌 Easy to expand with additional nodes
 
 ## Configuration
 
