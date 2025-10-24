@@ -3,11 +3,10 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
+#include <BME280I2C.h>
 
-// BME280 sensor instance
-Adafruit_BME280 bme;
+// BME280 sensor instance using Tyler Glenn's library (minimal dependencies)
+BME280I2C bme;
 
 // Sensor reading variables
 float temperature = 0.0;
@@ -18,23 +17,30 @@ bool sensorAvailable = false;
 
 // Initialize BME280 sensor
 bool initBME280() {
-  // Try to initialize with I2C address 0x76 (default)
-  if (bme.begin(0x76)) {
-    sensorAvailable = true;
-    Serial.println("BME280 sensor found at address 0x76");
-    return true;
+  // BME280I2C::Settings settings - use default settings
+  // Sensor will auto-detect I2C address (0x76 or 0x77)
+  
+  if (!bme.begin()) {
+    sensorAvailable = false;
+    Serial.println("BME280 sensor not found - weather page will show unavailable");
+    return false;
   }
   
-  // Try alternate I2C address 0x77
-  if (bme.begin(0x77)) {
-    sensorAvailable = true;
-    Serial.println("BME280 sensor found at address 0x77");
-    return true;
+  sensorAvailable = true;
+  
+  // Detect which address is being used
+  switch(bme.chipModel()) {
+    case BME280::ChipModel_BME280:
+      Serial.println("BME280 sensor found and initialized");
+      break;
+    case BME280::ChipModel_BMP280:
+      Serial.println("BMP280 sensor found (no humidity)");
+      break;
+    default:
+      Serial.println("Unknown sensor found");
   }
   
-  sensorAvailable = false;
-  Serial.println("BME280 sensor not found - weather page will show unavailable");
-  return false;
+  return true;
 }
 
 // Read sensor data
@@ -43,10 +49,12 @@ void readBME280() {
     return;
   }
   
-  temperature = bme.readTemperature();
-  humidity = bme.readHumidity();
-  pressure = bme.readPressure() / 100.0F; // Convert to hPa
-  altitude = bme.readAltitude(1013.25); // Sea level pressure
+  // Read all sensor data at once
+  bme.read(pressure, temperature, humidity);
+  
+  // Pressure is already in hPa from the library
+  // Temperature is in Celsius
+  // Humidity is in %
 }
 
 // Convert Celsius to Fahrenheit

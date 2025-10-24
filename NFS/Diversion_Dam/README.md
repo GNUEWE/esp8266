@@ -34,8 +34,9 @@ SCL   →   GPIO5 (D1)
 Install via Arduino IDE Library Manager:
 - ESP8266WiFi (included with ESP8266 board package)
 - ESP8266WebServer (included with ESP8266 board package)
-- Adafruit BME280 Library
-- Adafruit Unified Sensor Library
+- BME280 by Tyler Glenn (lightweight library with minimal dependencies)
+
+**Note:** We use Tyler Glenn's BME280 library instead of Adafruit's to avoid dependency complexity. It only requires Wire.h and provides all necessary functionality.
 
 ## Files
 
