@@ -33,14 +33,14 @@ Connect the BME280 sensor to your ESP8266:
 - Arduino IDE with ESP8266 board support
 - ESP8266WiFi library (included with ESP8266 board package)
 - ESP8266WebServer library (included with ESP8266 board package)
-- BME280 library by Tyler Glenn (lightweight, no heavy dependencies)
+- BME280 library by Tyler Glenn (minimal dependencies)
 
 ## Installation
 
 1. Install required libraries in Arduino IDE:
    - Go to Sketch → Include Library → Manage Libraries
    - Search and install: "BME280" by Tyler Glenn
-   - Note: Use the simple BME280 library, NOT the Adafruit version
+   - This library was chosen for its simplicity and minimal dependency footprint
 
 2. Open `NFS/Diversion_Dam/esp8266_webserver.ino` in Arduino IDE
 

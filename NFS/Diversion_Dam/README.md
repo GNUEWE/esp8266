@@ -36,7 +36,7 @@ Install via Arduino IDE Library Manager:
 - ESP8266WebServer (included with ESP8266 board package)
 - BME280 by Tyler Glenn (lightweight library with minimal dependencies)
 
-**Note:** We use Tyler Glenn's BME280 library instead of Adafruit's to avoid dependency complexity. It only requires Wire.h and provides all necessary functionality.
+**Note:** This project uses a lightweight BME280 library that only requires Wire.h, keeping the dependency footprint small while providing all necessary sensor functionality.
 
 ## Files
 
