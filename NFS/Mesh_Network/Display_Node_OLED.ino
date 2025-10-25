@@ -13,24 +13,17 @@
  * Dependencies:
  * - painlessMesh library
  * - ArduinoJson library
- * - Adafruit SSD1306 library
- * - Adafruit GFX library
+ * - U8g2 library (lightweight OLED driver)
  */
 
 #include <Arduino.h>
 #include <painlessMesh.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <U8g2lib.h>
 #include <ArduinoJson.h>
 
-// OLED display configuration
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET -1  // Reset pin not used
-#define SCREEN_ADDRESS 0x3C
-
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// OLED display configuration using U8g2
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 // Mesh network configuration
 #define MESH_SSID       "RooseveltMesh"
@@ -65,21 +58,15 @@ void setup() {
   // Initialize I2C
   Wire.begin();
   
-  // Initialize OLED display
-  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Loop forever
-  }
-  
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
-  display.println(F("Roosevelt Lake"));
-  display.println(F("Mesh Network"));
-  display.println();
-  display.println(F("Initializing..."));
-  display.display();
+  // Initialize OLED display with U8g2
+  Wire.begin();
+  u8g2.begin();
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB08_tr);
+  u8g2.drawStr(0, 10, "Roosevelt Lake");
+  u8g2.drawStr(0, 24, "Mesh Network");
+  u8g2.drawStr(0, 38, "Initializing...");
+  u8g2.sendBuffer();
   
   Serial.println("OLED Display initialized");
   
@@ -137,72 +124,57 @@ void receivedCallback(uint32_t from, String &msg) {
 }
 
 void updateDisplay() {
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0);
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB08_tr);
   
   // Header
-  display.setTextSize(1);
-  display.println(F("Roosevelt Lake"));
-  display.drawLine(0, 10, SCREEN_WIDTH, 10, SSD1306_WHITE);
+  u8g2.drawStr(0, 10, "Roosevelt Lake");
+  u8g2.drawLine(0, 12, 128, 12);
   
-  display.setCursor(0, 14);
+  char buf[32];
   
   if (latestData.hasData) {
     unsigned long age = millis() - latestData.lastUpdate;
     
     if (age < 120000) {  // Data less than 2 minutes old
       // Display sensor type
-      display.print(F("Sensor: "));
-      display.println(latestData.nodeType);
-      display.println();
+      snprintf(buf, sizeof(buf), "%s", latestData.nodeType.c_str());
+      u8g2.drawStr(0, 24, buf);
       
       // Temperature
-      display.setTextSize(2);
-      display.print(latestData.temperature, 1);
-      display.setTextSize(1);
-      display.println(F(" C"));
+      u8g2.setFont(u8g2_font_ncenB10_tr);
+      snprintf(buf, sizeof(buf), "%.1fC", latestData.temperature);
+      u8g2.drawStr(0, 40, buf);
       
       // Pressure
-      display.setTextSize(1);
-      display.print(F("Press: "));
-      display.print(latestData.pressure, 0);
-      display.println(F(" hPa"));
+      u8g2.setFont(u8g2_font_ncenB08_tr);
+      snprintf(buf, sizeof(buf), "P: %.0f hPa", latestData.pressure);
+      u8g2.drawStr(0, 52, buf);
       
       // Humidity (if available)
       if (latestData.humidity > 0.1) {
-        display.print(F("Humid: "));
-        display.print(latestData.humidity, 0);
-        display.println(F(" %"));
+        snprintf(buf, sizeof(buf), "H: %.0f%%", latestData.humidity);
+        u8g2.drawStr(0, 63, buf);
+      } else {
+        // Show node count instead
+        snprintf(buf, sizeof(buf), "Nodes: %d", mesh.getNodeList().size() + 1);
+        u8g2.drawStr(0, 63, buf);
       }
-      
-      // Mesh info
-      display.println();
-      display.print(F("Nodes: "));
-      display.println(mesh.getNodeList().size() + 1);
       
     } else {
       // Data is stale
-      display.setTextSize(1);
-      display.println();
-      display.println(F("  WAITING FOR"));
-      display.println(F("  SENSOR DATA"));
-      display.println();
-      display.print(F("Last: "));
-      display.print(age / 1000);
-      display.println(F("s ago"));
+      u8g2.drawStr(0, 28, "WAITING FOR");
+      u8g2.drawStr(0, 40, "SENSOR DATA");
+      snprintf(buf, sizeof(buf), "Last: %lus ago", age / 1000);
+      u8g2.drawStr(0, 56, buf);
     }
   } else {
     // No data yet
-    display.setTextSize(1);
-    display.println();
-    display.println(F("  CONNECTING TO"));
-    display.println(F("  MESH NETWORK"));
-    display.println();
-    display.print(F("Nodes: "));
-    display.println(mesh.getNodeList().size() + 1);
+    u8g2.drawStr(0, 28, "CONNECTING TO");
+    u8g2.drawStr(0, 40, "MESH NETWORK");
+    snprintf(buf, sizeof(buf), "Nodes: %d", mesh.getNodeList().size() + 1);
+    u8g2.drawStr(0, 56, buf);
   }
   
-  display.display();
+  u8g2.sendBuffer();
 }

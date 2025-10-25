@@ -15,11 +15,12 @@ This mesh network solution enables:
 
 ### 4-Node Mesh Setup
 
-**Node 1: Gateway/Root Node**
-- ESP8266 Wemos D1 R2
+**Node 1: Gateway/Root Node with Display**
+- ESP8266 Wemos D1 R2 (Arduino Uno footprint compatible)
+- SSD1306 OLED 128x64 display (integrated on gateway)
 - Firmware: `Mesh_Network.ino`
-- Role: Web server, data aggregation, mesh root
-- No sensors needed
+- Role: Web server, data aggregation, mesh root, local display, MQTT publisher
+- Wiring: SDA=GPIO4 (D2), SCL=GPIO5 (D1)
 
 **Node 2: BME280 Sensor Node**
 - ESP8266 Wemos D1 R2
@@ -74,16 +75,19 @@ Install these libraries via Arduino IDE Library Manager:
 2. `ArduinoJson` by Benoit Blanchon - JSON parsing
 3. `TaskScheduler` - (dependency of painlessMesh)
 
+**For Gateway Node:**
+4. `U8g2` by oliver - Lightweight OLED display driver
+5. `PubSubClient` by Nick O'Leary - MQTT client (optional)
+
 **For BME280 Nodes:**
-4. `BME280` by Tyler Glenn - BME280/BMP280 sensor support
+6. `BME280` by Tyler Glenn - BME280/BMP280 sensor support
 
 **For BME680 Nodes:**
-5. `Adafruit BME680 Library` - BME680 sensor support
-6. `Adafruit Unified Sensor` - (dependency)
+7. `Adafruit BME680 Library` - BME680 sensor support
+8. `Adafruit Unified Sensor` - (dependency)
 
 **For Display Nodes:**
-7. `Adafruit SSD1306` - OLED display driver
-8. `Adafruit GFX Library` - Graphics library
+9. `U8g2` by oliver - Lightweight OLED display driver (same as gateway)
 
 ### ESP8266 Board Support
 
@@ -104,13 +108,26 @@ All nodes must use the same mesh credentials (already configured in code):
 #define MESH_PORT       5555
 ```
 
+### 1a. Configure MQTT (Optional)
+
+The gateway node can publish sensor data to an MQTT broker. Edit `Mesh_Network.ino`:
+```cpp
+#define MQTT_ENABLED    true                    // Set to true to enable
+#define MQTT_SERVER     "your.mqtt.broker.com"  // Your MQTT broker address
+#define MQTT_PORT       1883                    // MQTT port (usually 1883)
+#define MQTT_TOPIC      "roosevelt/sensors"     // Topic to publish to
+```
+
+MQTT publishes JSON data with all sensor readings every time new data arrives from mesh nodes. Perfect for integration with Home Assistant, Node-RED, or other IoT platforms.
+
 ### 2. Program Each Node
 
-**Gateway Node:**
-1. Open `Mesh_Network.ino` in Arduino IDE
-2. Select Board: "LOLIN(WEMOS) D1 R2 & mini"
-3. Select correct COM port
-4. Upload
+**Gateway Node with Display:**
+1. Wire SSD1306 OLED to ESP8266 (I2C)
+2. Open `Mesh_Network.ino` in Arduino IDE
+3. Select Board: "LOLIN(WEMOS) D1 R2 & mini"
+4. Select correct COM port
+5. Upload
 
 **BME280 Sensor Nodes (x3):**
 1. Wire BME280 sensor to ESP8266

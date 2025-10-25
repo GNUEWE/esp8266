@@ -1,17 +1,21 @@
 /*
- * ESP8266 Mesh Network - Root/Gateway Node
+ * ESP8266 Mesh Network - Root/Gateway Node with Display
  * 
  * This is the main gateway node that:
  * - Connects to mesh network
  * - Serves web portal (HTTP server)
  * - Collects sensor data from mesh nodes via JSON
- * - Displays aggregate data from all sensors
+ * - Displays aggregate data on OLED (U8g2 library)
+ * - Publishes data via MQTT (optional)
  * 
- * Hardware: ESP8266 Wemos D1 R2
+ * Hardware: ESP8266 Wemos D1 R2 (Arduino Uno footprint)
+ *           SSD1306 OLED Display 128x64 (I2C: SDA=GPIO4/D2, SCL=GPIO5/D1)
  * 
  * Dependencies:
  * - painlessMesh library
  * - ArduinoJson library
+ * - U8g2 library (for OLED display)
+ * - PubSubClient library (for MQTT)
  */
 
 #include <Arduino.h>
@@ -19,16 +23,34 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
+#include <Wire.h>
+#include <U8g2lib.h>
+#include <PubSubClient.h>
+
+// OLED display configuration using U8g2
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 // Mesh network configuration
 #define MESH_SSID       "RooseveltMesh"
 #define MESH_PASSWORD   "meshpass123"
 #define MESH_PORT       5555
 
+// MQTT configuration (optional - set MQTT_ENABLED to true to use)
+#define MQTT_ENABLED    false
+#define MQTT_SERVER     "mqtt.example.com"
+#define MQTT_PORT       1883
+#define MQTT_TOPIC      "roosevelt/sensors"
+
 // Web server
 ESP8266WebServer server(80);
 Scheduler userScheduler;
 painlessMesh mesh;
+WiFiClient espClient;
+PubSubClient mqttClient(espClient);
+
+// Display update interval
+#define DISPLAY_INTERVAL 3000  // 3 seconds
+unsigned long lastDisplayUpdate = 0;
 
 // Store sensor data from mesh nodes
 struct SensorData {
@@ -52,10 +74,23 @@ void newConnectionCallback(uint32_t nodeId);
 void changedConnectionCallback();
 void nodeTimeAdjustedCallback(int32_t offset);
 String generateWebPage();
+void updateDisplay();
+void publishToMQTT();
+void reconnectMQTT();
 
 void setup() {
   Serial.begin(115200);
   delay(10);
+  
+  // Initialize OLED display
+  Wire.begin();
+  u8g2.begin();
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB08_tr);
+  u8g2.drawStr(0, 10, "Roosevelt Lake");
+  u8g2.drawStr(0, 24, "Mesh Gateway");
+  u8g2.drawStr(0, 38, "Initializing...");
+  u8g2.sendBuffer();
   
   // Initialize sensor data storage
   for (int i = 0; i < MAX_NODES; i++) {
@@ -79,6 +114,12 @@ void setup() {
   Serial.println("Mesh Gateway Node Initialized");
   Serial.print("Node ID: ");
   Serial.println(mesh.getNodeId());
+  
+  // Setup MQTT if enabled
+  if (MQTT_ENABLED) {
+    mqttClient.setServer(MQTT_SERVER, MQTT_PORT);
+    Serial.println("MQTT configured");
+  }
   
   // Setup web server
   server.on("/", HTTP_GET, []() {
@@ -109,11 +150,28 @@ void setup() {
   
   server.begin();
   Serial.println("HTTP Server Started on Port 80");
+  
+  // Initial display update
+  updateDisplay();
 }
 
 void loop() {
   mesh.update();
   server.handleClient();
+  
+  // Update display periodically
+  if (millis() - lastDisplayUpdate > DISPLAY_INTERVAL) {
+    updateDisplay();
+    lastDisplayUpdate = millis();
+  }
+  
+  // Handle MQTT if enabled
+  if (MQTT_ENABLED) {
+    if (!mqttClient.connected()) {
+      reconnectMQTT();
+    }
+    mqttClient.loop();
+  }
 }
 
 void receivedCallback(uint32_t from, String &msg) {
@@ -158,6 +216,14 @@ void receivedCallback(uint32_t from, String &msg) {
   
   Serial.printf("Updated node %u: T=%.1f°C, P=%.1fhPa\n", 
                 from, sensorNodes[nodeIndex].temperature, sensorNodes[nodeIndex].pressure);
+  
+  // Publish to MQTT if enabled
+  if (MQTT_ENABLED) {
+    publishToMQTT();
+  }
+  
+  // Update display immediately when new data arrives
+  updateDisplay();
 }
 
 void newConnectionCallback(uint32_t nodeId) {
@@ -361,4 +427,97 @@ String generateWebPage() {
 )rawliteral";
   
   return html;
+}
+
+// Update OLED display with sensor data
+void updateDisplay() {
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB08_tr);
+  
+  // Header
+  u8g2.drawStr(0, 10, "Roosevelt Lake");
+  u8g2.drawLine(0, 12, 128, 12);
+  
+  // Mesh status
+  char buf[32];
+  snprintf(buf, sizeof(buf), "Nodes: %d", mesh.getNodeList().size() + 1);
+  u8g2.drawStr(0, 24, buf);
+  
+  // Find most recent sensor data
+  int recentIndex = -1;
+  unsigned long mostRecent = 0;
+  for (int i = 0; i < MAX_NODES; i++) {
+    if (sensorNodes[i].hasData && sensorNodes[i].lastUpdate > mostRecent) {
+      mostRecent = sensorNodes[i].lastUpdate;
+      recentIndex = i;
+    }
+  }
+  
+  if (recentIndex >= 0) {
+    // Display most recent sensor data
+    u8g2.setFont(u8g2_font_ncenB10_tr);
+    snprintf(buf, sizeof(buf), "%.1fC", sensorNodes[recentIndex].temperature);
+    u8g2.drawStr(0, 40, buf);
+    
+    u8g2.setFont(u8g2_font_ncenB08_tr);
+    snprintf(buf, sizeof(buf), "%.0fhPa", sensorNodes[recentIndex].pressure);
+    u8g2.drawStr(0, 52, buf);
+    
+    if (sensorNodes[recentIndex].humidity > 0.1) {
+      snprintf(buf, sizeof(buf), "H:%.0f%%", sensorNodes[recentIndex].humidity);
+      u8g2.drawStr(0, 63, buf);
+    }
+    
+    // Show sensor type
+    u8g2.drawStr(70, 52, sensorNodes[recentIndex].nodeType.c_str());
+  } else {
+    u8g2.setFont(u8g2_font_ncenB08_tr);
+    u8g2.drawStr(0, 40, "Waiting for");
+    u8g2.drawStr(0, 52, "sensor data...");
+  }
+  
+  u8g2.sendBuffer();
+}
+
+// Publish sensor data to MQTT
+void publishToMQTT() {
+  if (!mqttClient.connected()) {
+    return;
+  }
+  
+  DynamicJsonDocument doc(1024);
+  JsonArray sensors = doc.createNestedArray("sensors");
+  
+  for (int i = 0; i < MAX_NODES; i++) {
+    if (sensorNodes[i].hasData) {
+      JsonObject node = sensors.createNestedObject();
+      node["nodeId"] = sensorNodes[i].nodeId;
+      node["type"] = sensorNodes[i].nodeType;
+      node["temperature"] = sensorNodes[i].temperature;
+      node["pressure"] = sensorNodes[i].pressure;
+      node["humidity"] = sensorNodes[i].humidity;
+      node["gasResistance"] = sensorNodes[i].gasResistance;
+    }
+  }
+  
+  String output;
+  serializeJson(doc, output);
+  mqttClient.publish(MQTT_TOPIC, output.c_str());
+  Serial.println("Published to MQTT");
+}
+
+// Reconnect to MQTT broker
+void reconnectMQTT() {
+  if (millis() % 5000 < 100) {  // Try every 5 seconds
+    Serial.print("Attempting MQTT connection...");
+    String clientId = "RooseveltMesh-";
+    clientId += String(mesh.getNodeId());
+    
+    if (mqttClient.connect(clientId.c_str())) {
+      Serial.println("connected");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.println(mqttClient.state());
+    }
+  }
 }
