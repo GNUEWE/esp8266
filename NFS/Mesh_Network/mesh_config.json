@@ -1,0 +1,261 @@
+{
+  "mesh_network": {
+    "name": "Roosevelt Lake Mesh Network",
+    "ssid": "RooseveltMesh",
+    "password": "meshpass123",
+    "port": 5555,
+    "description": "Self-organizing WiFi mesh network for sensor data collection across Roosevelt Lake area"
+  },
+  "nodes": [
+    {
+      "node_id": 1,
+      "type": "gateway",
+      "hardware": "ESP8266 Wemos D1 R2",
+      "firmware": "Mesh_Network.ino",
+      "role": "Gateway and web server",
+      "ip_address": "192.168.4.1",
+      "features": [
+        "Web portal",
+        "Data aggregation",
+        "JSON API endpoint",
+        "Mesh root node"
+      ],
+      "location": "Visitor center or main access point"
+    },
+    {
+      "node_id": 2,
+      "type": "sensor_bme280",
+      "hardware": "ESP8266 Wemos D1 R2 + BME280",
+      "firmware": "Sensor_Node_BME280.ino",
+      "role": "Temperature and pressure sensor",
+      "sensors": {
+        "temperature": {
+          "unit": "Celsius",
+          "range": "-40 to 85°C"
+        },
+        "pressure": {
+          "unit": "hPa",
+          "range": "300 to 1100 hPa"
+        },
+        "humidity": {
+          "available": false,
+          "note": "BME280 may not have humidity sensor"
+        }
+      },
+      "i2c_address": "0x76 or 0x77",
+      "update_interval": "30 seconds",
+      "location": "Diversion Dam area"
+    },
+    {
+      "node_id": 3,
+      "type": "sensor_bme280",
+      "hardware": "ESP8266 Wemos D1 R2 + BME280",
+      "firmware": "Sensor_Node_BME280.ino",
+      "role": "Temperature and pressure sensor",
+      "sensors": {
+        "temperature": {
+          "unit": "Celsius",
+          "range": "-40 to 85°C"
+        },
+        "pressure": {
+          "unit": "hPa",
+          "range": "300 to 1100 hPa"
+        },
+        "humidity": {
+          "available": false,
+          "note": "BME280 may not have humidity sensor"
+        }
+      },
+      "i2c_address": "0x76 or 0x77",
+      "update_interval": "30 seconds",
+      "location": "Campground area"
+    },
+    {
+      "node_id": 4,
+      "type": "sensor_bme280",
+      "hardware": "ESP8266 Wemos D1 R2 + BME280",
+      "firmware": "Sensor_Node_BME280.ino",
+      "role": "Temperature and pressure sensor",
+      "sensors": {
+        "temperature": {
+          "unit": "Celsius",
+          "range": "-40 to 85°C"
+        },
+        "pressure": {
+          "unit": "hPa",
+          "range": "300 to 1100 hPa"
+        },
+        "humidity": {
+          "available": false,
+          "note": "BME280 may not have humidity sensor"
+        }
+      },
+      "i2c_address": "0x76 or 0x77",
+      "update_interval": "30 seconds",
+      "location": "Hiking trail entrance"
+    },
+    {
+      "node_id": 5,
+      "type": "sensor_bme680",
+      "hardware": "ESP8266 Wemos D1 R2 + BME680",
+      "firmware": "Sensor_Node_BME680.ino",
+      "role": "Full environmental sensor suite",
+      "sensors": {
+        "temperature": {
+          "unit": "Celsius",
+          "range": "-40 to 85°C"
+        },
+        "pressure": {
+          "unit": "hPa",
+          "range": "300 to 1100 hPa"
+        },
+        "humidity": {
+          "available": true,
+          "unit": "Percent",
+          "range": "0 to 100%"
+        },
+        "gas_resistance": {
+          "available": true,
+          "unit": "Ohms",
+          "note": "Air quality indicator"
+        }
+      },
+      "i2c_address": "0x77",
+      "update_interval": "30 seconds",
+      "location": "Main observation point"
+    },
+    {
+      "node_id": 6,
+      "type": "display_oled",
+      "hardware": "ESP8266 Wemos D1 R2 + SSD1306 OLED",
+      "firmware": "Display_Node_OLED.ino",
+      "role": "Display sensor data for visitors",
+      "display": {
+        "type": "SSD1306",
+        "resolution": "128x64",
+        "color": "monochrome"
+      },
+      "i2c_address": "0x3C",
+      "features": [
+        "Real-time temperature display",
+        "Pressure readings",
+        "Humidity (if available)",
+        "Mesh node count",
+        "Auto-refresh every 5 seconds"
+      ],
+      "location": "Visitor information kiosk #1"
+    },
+    {
+      "node_id": 7,
+      "type": "display_oled",
+      "hardware": "ESP8266 Wemos D1 R2 + SSD1306 OLED",
+      "firmware": "Display_Node_OLED.ino",
+      "role": "Display sensor data for visitors",
+      "display": {
+        "type": "SSD1306",
+        "resolution": "128x64",
+        "color": "monochrome"
+      },
+      "i2c_address": "0x3C",
+      "features": [
+        "Real-time temperature display",
+        "Pressure readings",
+        "Humidity (if available)",
+        "Mesh node count",
+        "Auto-refresh every 5 seconds"
+      ],
+      "location": "Visitor information kiosk #2"
+    }
+  ],
+  "json_message_formats": {
+    "sensor_bme280": {
+      "type": "BME280",
+      "temperature": 25.5,
+      "pressure": 1013.2,
+      "humidity": 0.0,
+      "gas": 0.0
+    },
+    "sensor_bme680": {
+      "type": "BME680",
+      "temperature": 26.3,
+      "pressure": 1012.8,
+      "humidity": 45.2,
+      "gas": 125000.0
+    }
+  },
+  "api_endpoints": {
+    "web_portal": {
+      "url": "http://192.168.4.1/",
+      "description": "Main web interface showing all sensor data"
+    },
+    "sensor_api": {
+      "url": "http://192.168.4.1/api/sensors",
+      "method": "GET",
+      "response_format": "JSON",
+      "description": "REST API endpoint returning all sensor data in JSON format"
+    }
+  },
+  "deployment_topology": {
+    "recommended_layout": [
+      "Place gateway node centrally where visitors congregate",
+      "Position sensor nodes at points of interest (POI) throughout area",
+      "Install display nodes at high-traffic visitor locations",
+      "Ensure each node is within WiFi range of at least one other node",
+      "Test mesh connectivity before permanent installation"
+    ],
+    "coverage_estimation": {
+      "range_per_node": "50-100m outdoors",
+      "total_coverage": "200-400m with 4-node chain",
+      "note": "Actual range depends on terrain and obstacles"
+    }
+  },
+  "wiring_diagrams": {
+    "i2c_connections": {
+      "VCC": "3.3V on ESP8266",
+      "GND": "GND on ESP8266",
+      "SDA": "GPIO4 (D2 on Wemos D1)",
+      "SCL": "GPIO5 (D1 on Wemos D1)"
+    },
+    "note": "All I2C devices can share the same bus"
+  },
+  "libraries_required": {
+    "all_nodes": [
+      "painlessMesh",
+      "ArduinoJson",
+      "TaskScheduler"
+    ],
+    "bme280_nodes": [
+      "BME280 by Tyler Glenn"
+    ],
+    "bme680_nodes": [
+      "Adafruit BME680 Library",
+      "Adafruit Unified Sensor"
+    ],
+    "display_nodes": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ]
+  },
+  "configuration": {
+    "sensor_update_interval": {
+      "value": 30000,
+      "unit": "milliseconds",
+      "description": "How often sensors broadcast data to mesh"
+    },
+    "display_update_interval": {
+      "value": 5000,
+      "unit": "milliseconds",
+      "description": "How often displays refresh"
+    },
+    "web_auto_refresh": {
+      "value": 30000,
+      "unit": "milliseconds",
+      "description": "How often web page auto-refreshes"
+    },
+    "max_nodes": {
+      "value": 4,
+      "description": "Maximum sensor nodes tracked by gateway",
+      "note": "Can be increased by changing MAX_NODES in gateway firmware"
+    }
+  }
+}
