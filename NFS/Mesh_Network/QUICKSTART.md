@@ -35,16 +35,19 @@ Open Arduino IDE → Tools → Manage Libraries, search and install:
 2. `ArduinoJson` by Benoit Blanchon
 3. `TaskScheduler` by Anatoli Arkhipenko
 
+**For Gateway node:**
+4. `U8g2` by oliver (lightweight OLED driver)
+5. `PubSubClient` by Nick O'Leary (optional, for MQTT)
+
 **For BME280 nodes:**
-4. `BME280` by Tyler Glenn
+6. `BME280` by Tyler Glenn
 
 **For BME680 node:**
-5. `Adafruit BME680 Library`
-6. `Adafruit Unified Sensor`
+7. `Adafruit BME680 Library`
+8. `Adafruit Unified Sensor`
 
 **For Display nodes:**
-7. `Adafruit SSD1306`
-8. `Adafruit GFX Library`
+9. `U8g2` by oliver (same as gateway)
 
 ✅ All libraries installed? Move to Step 2!
 
@@ -74,16 +77,19 @@ SCL               → GPIO5 (D1)
 
 ## 💾 Step 3: Program Your Nodes (10 minutes)
 
-### Node 1: Gateway (No sensor needed)
+### Node 1: Gateway with Display
 
-1. Open `Mesh_Network.ino` in Arduino IDE
-2. Select: Tools → Board → "LOLIN(WEMOS) D1 R2 & mini"
-3. Select: Tools → Port → (Your COM port)
-4. Click: Upload button ➡️
-5. Open Serial Monitor (115200 baud)
-6. **Note the Node ID** printed in Serial Monitor
+1. Wire SSD1306 OLED to ESP8266 (I2C: SDA=D2, SCL=D1)
+2. Open `Mesh_Network.ino` in Arduino IDE
+3. Optional: Enable MQTT by setting `MQTT_ENABLED true` and configuring broker
+4. Select: Tools → Board → "LOLIN(WEMOS) D1 R2 & mini"
+5. Select: Tools → Port → (Your COM port)
+6. Click: Upload button ➡️
+7. Open Serial Monitor (115200 baud)
+8. **OLED should show "Roosevelt Lake Mesh Gateway"**
+9. **Note the Node ID** printed in Serial Monitor
 
-✅ Upload successful? You should see "Mesh Gateway Node Initialized"
+✅ Upload successful? Display shows initialization message?
 
 ---
 
